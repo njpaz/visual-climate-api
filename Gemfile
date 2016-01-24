@@ -37,6 +37,7 @@ gem 'httparty'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
+  gem 'pry-rails'
   gem 'pry-byebug'
   gem 'rspec-rails'
 end
