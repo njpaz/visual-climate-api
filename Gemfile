@@ -39,7 +39,7 @@ gem 'httparty'
 group :development, :test do
   gem 'pry-rails'
   gem 'pry-byebug'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '~> 3.4.0'
 end
 
 group :development do
@@ -48,5 +48,11 @@ group :development do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+end
+
+group :test do
+  gem 'vcr', '~> 3.0.1'
+  gem 'webmock', '~> 1.22.6'
+  gem 'database_cleaner', '~> 1.5.1'
 end
 
