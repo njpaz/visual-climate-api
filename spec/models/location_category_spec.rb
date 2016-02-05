@@ -5,9 +5,9 @@ RSpec.describe LocationCategory, type: :model do
     NOAASync.new
   end
 
-  context 'import', vcr: { cassette_name: 'import_locationcategories' } do
+  context 'populate', vcr: { cassette_name: 'import_locationcategories' } do
     it 'retrieves all of the locationcategories and creates a record for each in the data_sets table' do
-      LocationCategory.do_import
+      LocationCategory.populate
 
       response = noaa_sync.locationcategories
       tested_response = response['results'][2]
@@ -20,7 +20,7 @@ RSpec.describe LocationCategory, type: :model do
 
     it 'only creates records if they do not exist' do
       LocationCategory.create(identifier: 'CITY')
-      LocationCategory.do_import
+      LocationCategory.populate
 
       expect(LocationCategory.count).to eq(12)
     end

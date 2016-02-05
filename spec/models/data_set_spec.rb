@@ -5,9 +5,9 @@ RSpec.describe DataSet, type: :model do
     NOAASync.new
   end
 
-  context 'import', vcr: { cassette_name: 'import_datasets' } do
+  context 'populate', vcr: { cassette_name: 'import_datasets' } do
     it 'retrieves all of the datasets and creates a record for each in the data_sets table' do
-      DataSet.do_import
+      DataSet.populate
 
       response = noaa_sync.datasets(params: { 'limit' => 1000 })
       tested_response = response['results'][7]
@@ -21,7 +21,7 @@ RSpec.describe DataSet, type: :model do
 
     it 'only creates records if they do not exist' do
       DataSet.create(identifier: 'ANNUAL')
-      DataSet.do_import
+      DataSet.populate
 
       expect(DataSet.count).to eq(11)
     end

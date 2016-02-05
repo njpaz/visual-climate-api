@@ -5,9 +5,9 @@ RSpec.describe Station, type: :model do
     NOAASync.new
   end
 
-  context 'import', vcr: { cassette_name: 'import_stations' } do
+  context 'populate', vcr: { cassette_name: 'import_stations' } do
     it 'retrieves all of the stations and creates a record for each in the stations table' do
-      Station.do_import
+      Station.populate
 
       response = noaa_sync.stations(params: { 'limit' => 1000 })
       tested_response = response['results'][7]
@@ -21,7 +21,7 @@ RSpec.describe Station, type: :model do
 
     it 'only creates records if they do not exist' do
       Station.create(identifier: 'COOP:010008')
-      Station.do_import
+      Station.populate
 
       expect(Station.count).to eq(124421)
     end

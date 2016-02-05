@@ -5,9 +5,9 @@ RSpec.describe Location, type: :model do
     NOAASync.new
   end
 
-  context 'import', vcr: { cassette_name: 'import_locations' } do
+  context 'populate', vcr: { cassette_name: 'import_locations' } do
     it 'retrieves all of the locations and creates a record for each in the locations table' do
-      Location.do_import
+      Location.populate
 
       response = noaa_sync.locations
       tested_response = response['results'][7]
@@ -21,7 +21,7 @@ RSpec.describe Location, type: :model do
 
     it 'only creates records if they do not exist' do
       Location.create(identifier: 'CITY:AG000002')
-      Location.do_import
+      Location.populate
 
       expect(Location.count).to eq(38849)
     end

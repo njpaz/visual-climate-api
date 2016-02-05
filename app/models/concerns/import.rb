@@ -2,19 +2,21 @@ module Import
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def do_import
+    def populate
+      import @import_columns, get_data
+    end
+
+    def get_data
       sync = NOAASync.new
       metadata = sync.send(@sync_type)
       count = metadata['metadata']['resultset']['count']
 
-      imported_data = get_import_data(sync, count, pluck(:identifier))
-
-      import @import_columns, imported_data
+      gather_all_data(sync, count, pluck(:identifier))
     end
 
   private
 
-    def get_import_data(sync, count, existing_sets, limit: 1000, offset: 2)
+    def gather_all_data(sync, count, existing_sets, limit: 1000, offset: 2)
       imported_data = call_import(limit: 1, sync: sync, existing_sets: existing_sets)
 
       while offset <= count

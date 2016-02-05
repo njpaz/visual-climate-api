@@ -5,9 +5,9 @@ RSpec.describe DataType, type: :model do
     NOAASync.new
   end
 
-  context 'import', vcr: { cassette_name: 'import_datatypes' } do
+  context 'populate', vcr: { cassette_name: 'import_datatypes' } do
     it 'retrieves all of the datatypes and creates a record for each in the data_types table' do
-      DataType.do_import
+      DataType.populate
 
       response = noaa_sync.datatypes
       tested_response = response['results'][2]
@@ -20,7 +20,7 @@ RSpec.describe DataType, type: :model do
 
     it 'only creates records if they do not exist' do
       DataType.create(identifier: 'ACMC')
-      DataType.do_import
+      DataType.populate
 
       expect(DataType.count).to eq(1461)
     end
