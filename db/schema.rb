@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160202051011) do
+ActiveRecord::Schema.define(version: 20160205050500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,6 @@ ActiveRecord::Schema.define(version: 20160202051011) do
   create_table "data_categories", force: :cascade do |t|
     t.string   "identifier"
     t.string   "name"
-    t.integer  "data_set_id"
     t.integer  "location_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
@@ -27,10 +26,30 @@ ActiveRecord::Schema.define(version: 20160202051011) do
 
   add_index "data_categories", ["identifier"], name: "index_data_categories_on_identifier", unique: true, using: :btree
 
+  create_table "data_category_data_sets", force: :cascade do |t|
+    t.integer  "data_category_id"
+    t.integer  "data_set_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "data_category_data_types", force: :cascade do |t|
+    t.integer  "data_category_id"
+    t.integer  "data_type_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  create_table "data_set_data_types", force: :cascade do |t|
+    t.integer  "data_set_id"
+    t.integer  "data_type_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "data_sets", force: :cascade do |t|
     t.string   "identifier"
     t.decimal  "data_coverage"
-    t.integer  "data_type_id"
     t.integer  "location_id"
     t.integer  "station_id"
     t.date     "min_date"
@@ -45,14 +64,12 @@ ActiveRecord::Schema.define(version: 20160202051011) do
   create_table "data_types", force: :cascade do |t|
     t.string   "identifier"
     t.integer  "data_coverage"
-    t.integer  "data_set_id"
     t.integer  "location_id"
     t.integer  "station_id"
-    t.integer  "data_category_id"
     t.date     "min_date"
     t.date     "max_date"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   add_index "data_types", ["identifier"], name: "index_data_types_on_identifier", unique: true, using: :btree

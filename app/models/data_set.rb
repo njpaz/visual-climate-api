@@ -1,8 +1,22 @@
 class DataSet < ActiveRecord::Base
   include Import
 
+  has_many :data_category_data_sets
+  has_many :data_categories, through: :data_category_data_sets
+  has_many :data_set_data_types
+  has_many :data_types, through: :data_set_data_types
+
   @sync_type = :datasets
   @import_columns = [:identifier, :name, :data_coverage, :min_date, :max_date]
+
+  def self.sync_type
+    @sync_type
+  end
+
+  def self.sync_id
+    key_name = name.underscore + '_id'
+    key_name.to_sym
+  end
 
 private
 
