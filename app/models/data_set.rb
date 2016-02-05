@@ -5,6 +5,8 @@ class DataSet < ActiveRecord::Base
   has_many :data_categories, through: :data_category_data_sets
   has_many :data_set_data_types
   has_many :data_types, through: :data_set_data_types
+  has_many :data_set_location_categories
+  has_many :location_categories, through: :data_set_location_categories
 
   @sync_type = :datasets
   @import_columns = [:identifier, :name, :data_coverage, :min_date, :max_date]

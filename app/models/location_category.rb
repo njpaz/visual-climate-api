@@ -1,8 +1,20 @@
 class LocationCategory < ActiveRecord::Base
   include Import
 
+  has_many :data_set_location_categories
+  has_many :data_sets, through: :data_set_location_categories
+
   @sync_type = :locationcategories
   @import_columns = [:identifier, :name]
+
+  def self.sync_type
+    @sync_type
+  end
+
+  def self.sync_id
+    key_name = name.underscore + '_id'
+    key_name.to_sym
+  end
 
 private
 
