@@ -1,8 +1,21 @@
 class Station < ActiveRecord::Base
   include Import
 
+  has_many :data_category_stations
+  has_many :data_categories, through: :data_category_stations
+
   @sync_type = :stations
   @import_columns = [:identifier, :name, :elevation, :latitude, :longitude, :elevation_unit, :min_date, :max_date]
+
+
+  def self.sync_type
+    @sync_type
+  end
+
+  def self.sync_id
+    key_name = name.underscore + '_id'
+    key_name.to_sym
+  end
 
 private
 

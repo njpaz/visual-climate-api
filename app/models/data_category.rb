@@ -5,6 +5,10 @@ class DataCategory < ActiveRecord::Base
   has_many :data_sets, through: :data_category_data_sets
   has_many :data_category_data_types
   has_many :data_types, through: :data_category_data_types
+  has_many :data_category_locations
+  has_many :locations, through: :data_category_locations
+  has_many :data_category_stations
+  has_many :stations, through: :data_category_stations
 
   @sync_type = :datacategories
   @import_columns = [:identifier, :name]
