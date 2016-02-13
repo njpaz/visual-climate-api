@@ -5,24 +5,31 @@ RSpec.describe DataType, type: :model do
     NOAASync.new
   end
 
-  context 'populate', vcr: { cassette_name: 'import_datatypes' } do
+  let(:response) do
+    create_response(1461, true)
+  end
+
+  before do
+    stub_response(response, 'datatypes')
+  end
+
+  context 'populate' do
     it 'retrieves all of the datatypes and creates a record for each in the data_types table' do
       DataType.populate
 
-      response = noaa_sync.datatypes
-      tested_response = response['results'][2]
-      data_type = DataType.find_by(identifier: tested_response['id'])
+      first_result = DataType.find_by(identifier: response[:results][0][:id])
+      min_date = Date.strptime(response[:results][0][:mindate], '%Y-%m-%d')
 
-      expect(DataType.count).to eq(response['metadata']['resultset']['count'])
-      expect(data_type).to_not be_nil
-      expect(data_type.min_date).to eq(Date.strptime(tested_response['mindate'], '%Y-%m-%d'))
+      expect(DataType.count).to eq(response[:results].length)
+      expect(first_result.name).to eq(response[:results][0][:name])
+      expect(first_result.min_date).to eq(min_date)
     end
 
     it 'only creates records if they do not exist' do
-      DataType.create(identifier: 'ACMC')
+      DataType.create(identifier: response[:results][0][:id])
       DataType.populate
 
-      expect(DataType.count).to eq(1461)
+      expect(DataType.count).to eq(response[:metadata][:resultset][:count])
     end
   end
 end

@@ -62,6 +62,8 @@ GEM
     diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.6.0)
+    faker (1.6.1)
+      i18n (~> 0.5)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     hashdiff (0.2.3)
@@ -194,6 +196,7 @@ DEPENDENCIES
   activerecord-import
   coffee-rails (~> 4.1.0)
   database_cleaner (~> 1.5.1)
+  faker
   httparty
   jbuilder (~> 2.0)
   jquery-rails

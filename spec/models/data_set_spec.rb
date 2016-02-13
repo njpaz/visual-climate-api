@@ -5,25 +5,31 @@ RSpec.describe DataSet, type: :model do
     NOAASync.new
   end
 
-  context 'populate', vcr: { cassette_name: 'import_datasets' } do
+  let(:response) do
+    create_response(11, true)
+  end
+
+  before do
+    stub_response(response, 'datasets')
+  end
+
+  context 'populate' do
     it 'retrieves all of the datasets and creates a record for each in the data_sets table' do
       DataSet.populate
 
-      response = noaa_sync.datasets(params: { 'limit' => 1000 })
-      tested_response = response['results'][7]
-      data_set = DataSet.find_by(identifier: tested_response['id'])
+      first_result = DataSet.find_by(identifier: response[:results][0][:id])
+      min_date = Date.strptime(response[:results][0][:mindate], '%Y-%m-%d')
 
-      expect(DataSet.count).to eq(response['results'].length)
-      expect(data_set).to_not be_nil
-      expect(data_set.name).to eq(tested_response['name'])
-      expect(data_set.min_date).to eq(Date.strptime(tested_response['mindate'], '%Y-%m-%d'))
+      expect(DataSet.count).to eq(response[:results].length)
+      expect(first_result.name).to eq(response[:results][0][:name])
+      expect(first_result.min_date).to eq(min_date)
     end
 
     it 'only creates records if they do not exist' do
-      DataSet.create(identifier: 'ANNUAL')
+      DataSet.create(identifier: response[:results][0][:id])
       DataSet.populate
 
-      expect(DataSet.count).to eq(11)
+      expect(DataSet.count).to eq(response[:metadata][:resultset][:count])
     end
   end
 end

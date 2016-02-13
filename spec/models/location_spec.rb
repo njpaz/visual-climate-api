@@ -5,25 +5,31 @@ RSpec.describe Location, type: :model do
     NOAASync.new
   end
 
-  context 'populate', vcr: { cassette_name: 'import_locations' } do
+  let(:response) do
+    create_response(8849, true)
+  end
+
+  before do
+    stub_response(response, 'locations')
+  end
+
+  context 'populate' do
     it 'retrieves all of the locations and creates a record for each in the locations table' do
       Location.populate
 
-      response = noaa_sync.locations
-      tested_response = response['results'][7]
-      location = Location.find_by(identifier: tested_response['id'])
+      first_result = Location.find_by(identifier: response[:results][0][:id])
+      min_date = Date.strptime(response[:results][0][:mindate], '%Y-%m-%d')
 
-      expect(Location.count).to eq(response['metadata']['resultset']['count'])
-      expect(location).to_not be_nil
-      expect(location.name).to eq(tested_response['name'])
-      expect(location.min_date).to eq(Date.strptime(tested_response['mindate'], '%Y-%m-%d'))
+      expect(Location.count).to eq(response[:results].length)
+      expect(first_result.name).to eq(response[:results][0][:name])
+      expect(first_result.min_date).to eq(min_date)
     end
 
     it 'only creates records if they do not exist' do
-      Location.create(identifier: 'CITY:AG000002')
+      Location.create(identifier: response[:results][0][:id])
       Location.populate
 
-      expect(Location.count).to eq(38849)
+      expect(Location.count).to eq(response[:metadata][:resultset][:count])
     end
   end
 end

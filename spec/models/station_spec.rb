@@ -5,25 +5,31 @@ RSpec.describe Station, type: :model do
     NOAASync.new
   end
 
-  context 'populate', vcr: { cassette_name: 'import_stations' } do
+  let(:response) do
+    create_response(12442, true)
+  end
+
+  before do
+    stub_response(response, 'stations')
+  end
+
+  context 'populate' do
     it 'retrieves all of the stations and creates a record for each in the stations table' do
       Station.populate
 
-      response = noaa_sync.stations(params: { 'limit' => 1000 })
-      tested_response = response['results'][7]
-      station = Station.find_by(identifier: tested_response['id'])
+      first_result = Station.find_by(identifier: response[:results][0][:id])
+      min_date = Date.strptime(response[:results][0][:mindate], '%Y-%m-%d')
 
-      expect(Station.count).to eq(response['metadata']['resultset']['count'])
-      expect(station).to_not be_nil
-      expect(station.name).to eq(tested_response['name'])
-      expect(station.min_date).to eq(Date.strptime(tested_response['mindate'], '%Y-%m-%d'))
+      expect(Station.count).to eq(response[:results].length)
+      expect(first_result.name).to eq(response[:results][0][:name])
+      expect(first_result.min_date).to eq(min_date)
     end
 
     it 'only creates records if they do not exist' do
-      Station.create(identifier: 'COOP:010008')
+      Station.create(identifier: response[:results][0][:id])
       Station.populate
 
-      expect(Station.count).to eq(124421)
+      expect(Station.count).to eq(response[:metadata][:resultset][:count])
     end
   end
 end

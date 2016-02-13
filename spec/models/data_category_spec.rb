@@ -5,24 +5,29 @@ RSpec.describe DataCategory, type: :model do
     NOAASync.new
   end
 
-  context 'populate', vcr: { cassette_name: 'import_datacategories' } do
+  let(:response) do
+    create_response(11)
+  end
+
+  before do
+    stub_response(response, 'datacategories')
+  end
+
+  context 'populate' do
     it 'retrieves all of the datacategories and creates a record for each in the data_categories table' do
       DataCategory.populate
 
-      response = noaa_sync.datacategories(params: { 'limit': 1000 })
-      tested_response = response['results'][2]
-      data_category = DataCategory.find_by(identifier: tested_response['id'])
+      first_result = DataCategory.find_by(identifier: response[:results][0][:id])
 
-      expect(DataCategory.count).to eq(response['results'].length)
-      expect(data_category).to_not be_nil
-      expect(data_category.name).to eq(tested_response['name'])
+      expect(DataCategory.count).to eq(response[:results].length)
+      expect(first_result.name).to eq(response[:results][0][:name])
     end
 
     it 'only creates records if they do not exist' do
-      DataCategory.create(identifier: 'ANNAGR')
+      DataCategory.create(identifier: response[:results][0][:id])
       DataCategory.populate
 
-      expect(DataCategory.count).to eq(41)
+      expect(DataCategory.count).to eq(response[:metadata][:resultset][:count])
     end
   end
 end

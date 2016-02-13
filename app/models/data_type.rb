@@ -7,7 +7,7 @@ class DataType < ActiveRecord::Base
   has_many :data_categories, through: :data_category_data_types
 
   @sync_type = :datatypes
-  @import_columns = [:identifier, :data_coverage, :min_date, :max_date]
+  @import_columns = [:identifier, :name, :data_coverage, :min_date, :max_date]
 
   def self.sync_type
     @sync_type
@@ -27,6 +27,7 @@ private
       unless existing_sets.include?(result['id'])
         imports << [
           result['id'],
+          result['name'],
           result['datacoverage'],
           Date.strptime(result['mindate'], '%Y-%m-%d'),
           Date.strptime(result['maxdate'], '%Y-%m-%d')
