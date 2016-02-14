@@ -1,5 +1,5 @@
 class RemoveDataCategoryIdFromDataTypes < ActiveRecord::Migration
   def change
-    remove_column :data_types, :data_category_id
+    remove_column :data_types, :data_category_id, :integer
   end
 end

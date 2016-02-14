@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160213195742) do
+ActiveRecord::Schema.define(version: 20160214004715) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,11 +76,23 @@ ActiveRecord::Schema.define(version: 20160213195742) do
     t.datetime "updated_at",           null: false
   end
 
+  create_table "data_set_locations", force: :cascade do |t|
+    t.integer  "data_set_id"
+    t.integer  "location_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "data_set_stations", force: :cascade do |t|
+    t.integer  "data_set_id"
+    t.integer  "station_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
   create_table "data_sets", force: :cascade do |t|
     t.string   "identifier"
     t.decimal  "data_coverage"
-    t.integer  "location_id"
-    t.integer  "station_id"
     t.date     "min_date"
     t.date     "max_date"
     t.datetime "created_at",    null: false
@@ -90,11 +102,23 @@ ActiveRecord::Schema.define(version: 20160213195742) do
 
   add_index "data_sets", ["identifier"], name: "index_data_sets_on_identifier", unique: true, using: :btree
 
+  create_table "data_type_locations", force: :cascade do |t|
+    t.integer  "data_type_id"
+    t.integer  "location_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "data_type_stations", force: :cascade do |t|
+    t.integer  "data_type_id"
+    t.integer  "station_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
   create_table "data_types", force: :cascade do |t|
     t.string   "identifier"
     t.integer  "data_coverage"
-    t.integer  "location_id"
-    t.integer  "station_id"
     t.date     "min_date"
     t.date     "max_date"
     t.datetime "created_at",    null: false
@@ -113,16 +137,28 @@ ActiveRecord::Schema.define(version: 20160213195742) do
 
   add_index "location_categories", ["identifier"], name: "index_location_categories_on_identifier", unique: true, using: :btree
 
+  create_table "location_category_locations", force: :cascade do |t|
+    t.integer  "location_category_id"
+    t.integer  "location_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  create_table "location_stations", force: :cascade do |t|
+    t.integer  "location_id"
+    t.integer  "station_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
   create_table "locations", force: :cascade do |t|
     t.string   "identifier"
     t.string   "name"
     t.integer  "data_coverage"
-    t.integer  "data_set_id"
-    t.integer  "location_category_id"
     t.date     "min_date"
     t.date     "max_date"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   add_index "locations", ["identifier"], name: "index_locations_on_identifier", unique: true, using: :btree
@@ -134,9 +170,6 @@ ActiveRecord::Schema.define(version: 20160213195742) do
     t.string   "name"
     t.string   "elevation_unit"
     t.integer  "data_coverage"
-    t.integer  "data_set_id"
-    t.integer  "location_id"
-    t.integer  "data_type_id"
     t.date     "min_date"
     t.date     "max_date"
     t.datetime "created_at",     null: false

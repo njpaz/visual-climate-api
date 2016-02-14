@@ -7,6 +7,10 @@ class DataSet < ActiveRecord::Base
   has_many :data_types, through: :data_set_data_types
   has_many :data_set_location_categories
   has_many :location_categories, through: :data_set_location_categories
+  has_many :data_set_locations
+  has_many :locations, through: :data_set_locations
+  has_many :data_set_stations
+  has_many :stations, through: :data_set_stations
 
   @sync_type = :datasets
   @import_columns = [:identifier, :name, :data_coverage, :min_date, :max_date]

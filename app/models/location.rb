@@ -2,7 +2,15 @@ class Location < ActiveRecord::Base
   include Import
 
   has_many :data_category_locations
-  has_many :locations, through: :data_category_locations
+  has_many :data_categories, through: :data_category_locations
+  has_many :data_set_locations
+  has_many :data_sets, through: :data_set_locations
+  has_many :data_type_locations
+  has_many :data_types, through: :data_type_locations
+  has_many :location_category_locations
+  has_many :location_categories, through: :location_category_locations
+  has_many :location_stations
+  has_many :stations, through: :location_stations
 
   @sync_type = :locations
   @import_columns = [:identifier, :name, :data_coverage, :min_date, :max_date]

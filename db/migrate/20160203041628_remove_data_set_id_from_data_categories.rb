@@ -1,5 +1,5 @@
 class RemoveDataSetIdFromDataCategories < ActiveRecord::Migration
   def change
-    remove_column :data_categories, :data_set_id
+    remove_column :data_categories, :data_set_id, :integer
   end
 end

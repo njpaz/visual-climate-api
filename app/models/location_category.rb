@@ -3,6 +3,8 @@ class LocationCategory < ActiveRecord::Base
 
   has_many :data_set_location_categories
   has_many :data_sets, through: :data_set_location_categories
+  has_many :location_category_locations
+  has_many :locations, through: :location_category_locations
 
   @sync_type = :locationcategories
   @import_columns = [:identifier, :name]
