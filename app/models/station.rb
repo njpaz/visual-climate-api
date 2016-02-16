@@ -1,6 +1,7 @@
 class Station < ActiveRecord::Base
   include Import
 
+  has_many :weather_data
   has_many :data_category_stations
   has_many :data_categories, through: :data_category_stations
   has_many :data_set_stations

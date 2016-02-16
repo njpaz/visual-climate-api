@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160214004715) do
+ActiveRecord::Schema.define(version: 20160216232256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -180,15 +180,14 @@ ActiveRecord::Schema.define(version: 20160214004715) do
   add_index "stations", ["identifier"], name: "index_stations_on_identifier", unique: true, using: :btree
 
   create_table "weather_data", force: :cascade do |t|
-    t.string   "attributes"
+    t.string   "data_attributes"
     t.integer  "data_set_id"
     t.integer  "data_type_id"
-    t.integer  "location_id"
     t.integer  "station_id"
     t.integer  "value"
     t.date     "date"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
 end

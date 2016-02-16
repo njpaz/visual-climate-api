@@ -1,6 +1,7 @@
 class DataSet < ActiveRecord::Base
   include Import
 
+  has_many :weather_data
   has_many :data_category_data_sets
   has_many :data_categories, through: :data_category_data_sets
   has_many :data_set_data_types
