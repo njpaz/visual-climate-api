@@ -2,6 +2,8 @@ class DataCategory < ActiveRecord::Base
   include Import
 
   belongs_to :data_set
+  has_many :data_types
+
   has_many :data_category_data_types
   has_many :data_types, through: :data_category_data_types
   has_many :data_category_locations

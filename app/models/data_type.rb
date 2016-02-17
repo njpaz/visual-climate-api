@@ -1,10 +1,9 @@
 class DataType < ActiveRecord::Base
   include Import
 
+  belongs_to :data_category
   has_many :weather_data
 
-  has_many :data_category_data_types
-  has_many :data_categories, through: :data_category_data_types
   has_many :data_set_data_types
   has_many :data_sets, through: :data_set_data_types
   has_many :data_type_locations
@@ -22,6 +21,18 @@ class DataType < ActiveRecord::Base
   def self.sync_id
     key_name = name.underscore + '_id'
     key_name.to_sym
+  end
+
+  def self.populate_belongs_to
+    sync = NOAASync.new
+    missing_categories = DataCategory.where.not(id: pluck(:data_category_id))
+
+    missing_categories.each do |category|
+      data = sync.datatypes(params: { 'limit' => 1000, 'datacategoryid' => category.identifier })
+      related_categories = data['results'].map { |dr| dr['id'] }
+
+      where(identifier: related_categories).update_all(data_category_id: category.id)
+    end
   end
 
 private
