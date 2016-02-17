@@ -17,10 +17,10 @@ RSpec.describe Location, type: :model do
     stub_response(location_response, 'locations')
     stub_response(category_response, 'locationcategories')
 
-    dataset_results = category_response[:results].map { |result| result[:id] }
+    category_results = category_response[:results].map { |result| result[:id] }
 
     max = 0
-    dataset_results.each do |result|
+    category_results.each do |result|
       min = max
       max += 738
 

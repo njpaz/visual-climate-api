@@ -2,10 +2,11 @@ class DataType < ActiveRecord::Base
   include Import
 
   has_many :weather_data
-  has_many :data_set_data_types
-  has_many :data_sets, through: :data_set_data_types
+
   has_many :data_category_data_types
   has_many :data_categories, through: :data_category_data_types
+  has_many :data_set_data_types
+  has_many :data_sets, through: :data_set_data_types
   has_many :data_type_locations
   has_many :locations, through: :data_type_locations
   has_many :data_type_stations

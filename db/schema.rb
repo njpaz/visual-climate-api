@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160217204757) do
+ActiveRecord::Schema.define(version: 20160217212917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,18 +28,12 @@ ActiveRecord::Schema.define(version: 20160217204757) do
   create_table "data_categories", force: :cascade do |t|
     t.string   "identifier"
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "data_set_id"
   end
 
   add_index "data_categories", ["identifier"], name: "index_data_categories_on_identifier", unique: true, using: :btree
-
-  create_table "data_category_data_sets", force: :cascade do |t|
-    t.integer  "data_category_id"
-    t.integer  "data_set_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "data_category_data_types", force: :cascade do |t|
     t.integer  "data_category_id"
