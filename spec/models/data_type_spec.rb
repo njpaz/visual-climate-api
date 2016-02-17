@@ -13,9 +13,14 @@ RSpec.describe DataType, type: :model do
     create_response(20)
   end
 
+  let(:location_response) do
+    create_response(20, true)
+  end
+
   before do
     stub_response(type_response, 'datatypes')
     stub_response(category_response, 'datacategories')
+    stub_response(location_response, 'locations')
 
     datacategory_results = category_response[:results].map { |result| result[:id] }
 
@@ -28,6 +33,21 @@ RSpec.describe DataType, type: :model do
       response = { metadata: { resultset: { count: results.length } }, results: results }
 
       stub_request(:get, "http://ncdc.noaa.gov/cdo-web/api/v2/datatypes/?limit=1000&datacategoryid=#{result}").
+        with(headers: {'Token'=>Rails.application.secrets.NOAA_API_KEY}).
+        to_return(status: 200, body: response.to_json, headers: {:content_type => 'application/json'})
+    end
+
+    location_results = location_response[:results].map { |result| result[:id] }
+
+    max = 0
+    location_results.each do |result|
+      min = max
+      max += 73
+
+      results = type_response[:results][min...max] || []
+      response = { metadata: { resultset: { count: results.length } }, results: results }
+
+      stub_request(:get, "http://ncdc.noaa.gov/cdo-web/api/v2/datatypes/?limit=1000&locationid=#{result}").
         with(headers: {'Token'=>Rails.application.secrets.NOAA_API_KEY}).
         to_return(status: 200, body: response.to_json, headers: {:content_type => 'application/json'})
     end
@@ -57,9 +77,11 @@ RSpec.describe DataType, type: :model do
     it 'retrieves all data set ids and inserts them into the appropriate data category record' do
       DataType.populate
       DataCategory.populate
+      Location.populate
       DataType.populate_belongs_to
 
       expect(DataType.pluck(:data_category_id).include?(nil)).to be_falsey
+      expect(DataType.pluck(:location_id).include?(nil)).to be_falsey
     end
   end
 end

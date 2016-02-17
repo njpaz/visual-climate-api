@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160217223757) do
+ActiveRecord::Schema.define(version: 20160217224823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,13 +82,6 @@ ActiveRecord::Schema.define(version: 20160217223757) do
 
   add_index "data_sets", ["identifier"], name: "index_data_sets_on_identifier", unique: true, using: :btree
 
-  create_table "data_type_locations", force: :cascade do |t|
-    t.integer  "data_type_id"
-    t.integer  "location_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-  end
-
   create_table "data_type_stations", force: :cascade do |t|
     t.integer  "data_type_id"
     t.integer  "station_id"
@@ -105,6 +98,7 @@ ActiveRecord::Schema.define(version: 20160217223757) do
     t.datetime "updated_at",       null: false
     t.string   "name"
     t.integer  "data_category_id"
+    t.integer  "location_id"
   end
 
   add_index "data_types", ["identifier"], name: "index_data_types_on_identifier", unique: true, using: :btree

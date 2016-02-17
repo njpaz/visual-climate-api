@@ -6,8 +6,6 @@ class Location < ActiveRecord::Base
   has_many :data_categories, through: :data_category_locations
   has_many :data_set_locations
   has_many :data_sets, through: :data_set_locations
-  has_many :data_type_locations
-  has_many :data_types, through: :data_type_locations
   has_many :location_stations
   has_many :stations, through: :location_stations
 
