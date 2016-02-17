@@ -1,14 +1,13 @@
 class Location < ActiveRecord::Base
   include Import
 
+  belongs_to :location_category
   has_many :data_category_locations
   has_many :data_categories, through: :data_category_locations
   has_many :data_set_locations
   has_many :data_sets, through: :data_set_locations
   has_many :data_type_locations
   has_many :data_types, through: :data_type_locations
-  has_many :location_category_locations
-  has_many :location_categories, through: :location_category_locations
   has_many :location_stations
   has_many :stations, through: :location_stations
 
@@ -22,6 +21,18 @@ class Location < ActiveRecord::Base
   def self.sync_id
     key_name = name.underscore + '_id'
     key_name.to_sym
+  end
+
+  def self.populate_belongs_to
+    sync = NOAASync.new
+    missing_categories = LocationCategory.where.not(id: pluck(:location_category_id))
+
+    missing_categories.each do |category|
+      data = sync.locations(params: { 'limit' => 1000, 'locationcategoryid' => category.identifier })
+      related_locations = data['results'].map { |dr| dr['id'] }
+
+      where(identifier: related_locations).update_all(location_category_id: category.id)
+    end
   end
 
 private

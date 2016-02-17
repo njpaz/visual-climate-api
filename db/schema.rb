@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160216232256) do
+ActiveRecord::Schema.define(version: 20160217204757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -137,13 +137,6 @@ ActiveRecord::Schema.define(version: 20160216232256) do
 
   add_index "location_categories", ["identifier"], name: "index_location_categories_on_identifier", unique: true, using: :btree
 
-  create_table "location_category_locations", force: :cascade do |t|
-    t.integer  "location_category_id"
-    t.integer  "location_id"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-  end
-
   create_table "location_stations", force: :cascade do |t|
     t.integer  "location_id"
     t.integer  "station_id"
@@ -157,8 +150,9 @@ ActiveRecord::Schema.define(version: 20160216232256) do
     t.integer  "data_coverage"
     t.date     "min_date"
     t.date     "max_date"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "location_category_id"
   end
 
   add_index "locations", ["identifier"], name: "index_locations_on_identifier", unique: true, using: :btree
