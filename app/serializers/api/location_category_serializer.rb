@@ -1,5 +1,4 @@
 class API::LocationCategorySerializer < ActiveModel::Serializer
-  attributes :id, :identifier, :name, :data_set_id
-
+  attributes :id, :identifier, :name
   has_many :locations, embed: :ids
 end

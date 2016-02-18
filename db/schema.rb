@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160217224823) do
+ActiveRecord::Schema.define(version: 20160218021956) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,13 @@ ActiveRecord::Schema.define(version: 20160217224823) do
     t.integer  "data_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "data_set_location_categories", force: :cascade do |t|
+    t.integer  "location_category_id"
+    t.integer  "data_set_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   create_table "data_set_locations", force: :cascade do |t|
