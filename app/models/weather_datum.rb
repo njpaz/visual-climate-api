@@ -9,6 +9,14 @@ class WeatherDatum < ActiveRecord::Base
     where(data_set: data_set, date: startdate.to_date..enddate.to_date)
   end
 
+  def in_celsius
+    value / BigDecimal.new(10)
+  end
+
+  def in_fahrenheit
+    (in_celsius * (9.0 / 5.0)) + 32
+  end
+
 private
 
   def self.get_results(results: [], count:, sync:, data_set:, startdate:, enddate:, params:)
