@@ -44,7 +44,7 @@ RSpec.describe WeatherDatum, type: :model do
     stub_response(station_response, 'stations')
     stub_response(dataset_response, 'datasets')
 
-    stub_request(:get, "http://ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=#{first_datasetid}&enddate=#{startdate}&startdate=#{startdate}").
+    stub_request(:get, "http://ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=#{first_datasetid}&enddate=#{startdate}&limit=1000&startdate=#{startdate}").
       with(headers: {'Token'=>Rails.application.secrets.NOAA_API_KEY}).
       to_return(status: 200, body: data_response.to_json, headers: {:content_type => 'application/json'})
   end
