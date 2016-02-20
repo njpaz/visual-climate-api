@@ -8,4 +8,6 @@ Rails.application.routes.draw do
     resources :stations, only: [:index, :show]
     resources :weather_data, only: [:index, :show]
   end
+
+  get '/(*path)' => "frontend#index", as: :root, format: :html
 end

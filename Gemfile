@@ -37,6 +37,8 @@ gem 'activerecord-import'
 
 gem 'passenger'
 
+gem 'sidekiq'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
