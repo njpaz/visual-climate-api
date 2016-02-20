@@ -53,15 +53,14 @@ GEM
     capistrano-bundler (1.1.4)
       capistrano (~> 3.1)
       sshkit (~> 1.2)
+    capistrano-passenger (0.2.0)
+      capistrano (~> 3.0)
     capistrano-rails (1.1.6)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
-    capistrano3-puma (1.2.1)
-      capistrano (~> 3.0)
-      puma (>= 2.6)
     coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -110,6 +109,9 @@ GEM
     net-ssh (3.0.2)
     nokogiri (1.6.7)
       mini_portile2 (~> 2.0.0.rc2)
+    passenger (5.0.25)
+      rack
+      rake (>= 0.8.1)
     pg (0.18.4)
     pry (0.10.3)
       coderay (~> 1.1.0)
@@ -120,7 +122,6 @@ GEM
       pry (~> 0.10)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
-    puma (2.16.0)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -219,19 +220,19 @@ DEPENDENCIES
   activerecord-import
   capistrano
   capistrano-bundler
+  capistrano-passenger
   capistrano-rails
   capistrano-rvm
-  capistrano3-puma
   coffee-rails (~> 4.1.0)
   database_cleaner (~> 1.5.1)
   faker
   httparty
   jbuilder (~> 2.0)
   jquery-rails
+  passenger
   pg (~> 0.15)
   pry-byebug
   pry-rails
-  puma
   rails (= 4.2.5)
   rspec-rails (~> 3.4.0)
   sass-rails (~> 5.0)
