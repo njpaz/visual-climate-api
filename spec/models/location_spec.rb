@@ -6,7 +6,7 @@ RSpec.describe Location, type: :model do
   end
 
   let(:location_response) do
-    create_response(8849, true)
+    create_response(1560, true)
   end
 
   let(:category_response) do
@@ -22,7 +22,7 @@ RSpec.describe Location, type: :model do
     max = 0
     category_results.each do |result|
       min = max
-      max += 738
+      max += 130
 
       results = location_response[:results][min...max] || []
       response = { metadata: { resultset: { count: results.length } }, results: results }
@@ -60,6 +60,7 @@ RSpec.describe Location, type: :model do
       Location.populate_belongs_to
 
       expect(Location.pluck(:location_category_id).include?(nil)).to be_falsey
+      expect(Location.pluck(:location_category_id).uniq.length).to eq(12)
     end
   end
 end

@@ -6,8 +6,7 @@ class Location < ActiveRecord::Base
   has_many :data_categories, through: :data_category_locations
   has_many :data_set_locations
   has_many :data_sets, through: :data_set_locations
-  has_many :location_stations
-  has_many :stations, through: :location_stations
+  has_many :stations
 
   @sync_type = :locations
   @import_columns = [:identifier, :name, :data_coverage, :min_date, :max_date]
