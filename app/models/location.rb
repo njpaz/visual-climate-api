@@ -25,11 +25,24 @@ class Location < ActiveRecord::Base
     sync = NOAASync.new
     missing_categories = LocationCategory.where.not(id: pluck(:location_category_id))
 
-    missing_categories.each do |category|
-      data = sync.locations(params: { 'limit' => 1000, 'locationcategoryid' => category.identifier })
-      related_locations = data['results'].map { |dr| dr['id'] }
+    begin
+      missing_categories.each do |category|
+        data = sync.locations(params: { 'limit' => 1000, 'locationcategoryid' => category.identifier })
+        related_locations = data['results'].map { |dr| dr['id'] }
 
-      where(identifier: related_locations).update_all(location_category_id: category.id)
+        count = data['metadata']['resultset']['count']
+        offset = 1001
+
+        while offset <= count
+          data = sync.locations(params: { 'limit' => 1000, 'locationcategoryid' => category.identifier, 'offset' => offset })
+          related_locations += data['results'].map { |dr| dr['id'] }
+          offset += 1000
+        end
+
+        where(identifier: related_locations).update_all(location_category_id: category.id)
+      end
+    rescue
+      CallLog.create(status: data['status'], message: data['message'], location: self.name, identifier: category.identifier, location_method: 'populate_belongs_to')
     end
   end
 
