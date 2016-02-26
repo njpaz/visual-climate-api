@@ -1,5 +1,6 @@
 class Station < ActiveRecord::Base
   include Import
+  include BelongsToImport
 
   has_many :weather_data
   has_many :data_category_stations
@@ -12,7 +13,7 @@ class Station < ActiveRecord::Base
 
   @sync_type = :stations
   @import_columns = [:identifier, :name, :elevation, :latitude, :longitude, :elevation_unit, :min_date, :max_date]
-
+  @belongs_to_class = Location
 
   def self.sync_type
     @sync_type
@@ -21,31 +22,6 @@ class Station < ActiveRecord::Base
   def self.sync_id
     key_name = name.underscore + '_id'
     key_name.to_sym
-  end
-
-  def self.populate_belongs_to
-    sync = NOAASync.new
-    missing_locations = Location.where.not(id: pluck(:location_id))
-
-    begin
-      missing_locations.each do |location|
-        data = sync.stations(params: { 'limit' => 1000, 'locationid' => location.identifier })
-        related_locations = data['results'].map { |dr| dr['id'] }
-
-        count = data['metadata']['resultset']['count']
-        offset = 1001
-
-        while offset <= count
-          data = sync.stations(params: { 'limit' => 1000, 'locationid' => location.identifier, 'offset' => offset })
-          related_locations += data['results'].map { |dr| dr['id'] }
-          offset += 1000
-        end
-
-        where(identifier: related_locations).update_all(location_id: location.id)
-      end
-    rescue
-      CallLog.create(status: data['status'], message: data['message'], location: self.name, identifier: location.identifier, location_method: 'populate_belongs_to')
-    end
   end
 
 private

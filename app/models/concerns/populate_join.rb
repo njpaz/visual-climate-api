@@ -13,13 +13,14 @@ module PopulateJoin
     def iterate_through_records(sync:, sync_param_id:, missing_records:)
       results_arr = []
 
-      begin
-        missing_records.each do |record|
+      missing_records.each do |record|
+        begin
           data = sync.send(@call_class.sync_type, params: { 'limit' => 1000, sync_param_id => record.identifier })
           results_arr += get_results(sync: sync, data: data, sync_param_id: sync_param_id, record: record)
+        rescue
+          CallLog.find_or_create_by(status: data['status'], message: data['message'], location: self.name, location_method: 'populate_joins')
+          next
         end
-      rescue
-        CallLog.find_or_create_by(status: data['status'], message: data['message'], location: self.name, identifier: record.identifier, location_method: 'populate_joins')
       end
 
       results_arr

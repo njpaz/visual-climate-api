@@ -1,5 +1,6 @@
 class DataCategory < ActiveRecord::Base
   include Import
+  include BelongsToImport
 
   belongs_to :data_set
   has_many :data_types
@@ -13,6 +14,7 @@ class DataCategory < ActiveRecord::Base
 
   @sync_type = :datacategories
   @import_columns = [:identifier, :name]
+  @belongs_to_class = DataSet
 
   def self.sync_type
     @sync_type
@@ -21,18 +23,6 @@ class DataCategory < ActiveRecord::Base
   def self.sync_id
     key_name = name.underscore + '_id'
     key_name.to_sym
-  end
-
-  def self.populate_belongs_to
-    sync = NOAASync.new
-    missing_sets = DataSet.where.not(id: pluck(:data_set_id))
-
-    missing_sets.each do |set|
-      data = sync.datacategories(params: { 'limit' => 1000, 'datasetid' => set.identifier })
-      related_categories = data['results'].map { |dr| dr['id'] }
-
-      where(identifier: related_categories).update_all(data_set_id: set.id)
-    end
   end
 
 private
