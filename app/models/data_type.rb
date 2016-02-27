@@ -36,9 +36,16 @@ private
 
     missing_records.each do |record|
       data = sync.datatypes(params: { 'limit' => 1000, sync_param => record.identifier})
-      related_records = data['results'].map { |dr| dr['id'] }
+      begin
+        related_records = data['results'].map { |dr| dr['id'] }
 
-      where(identifier: related_records).update_all({ related_class.sync_id => record.id })
+        where(identifier: related_records).update_all({ related_class.sync_id => record.id })
+      rescue
+        if data['status'] == '429' # reached API limit for the day
+          RetryPopulateJob.set(wait_until: Date.tomorrow.midnight).perform_later self.name, 'populate_belongs_to'
+        end
+        next
+      end
     end
   end
 
