@@ -16,7 +16,9 @@ module BelongsToImport
 
           where(identifier: related_records).update_all(belongs_to_id => record.id)
         rescue
-          CallLog.find_or_create_by(status: data['status'], message: data['message'], location: self.name, location_method: 'populate_belongs_to')
+          if data['status'] == '429' # reached API limit for the day
+            RetryPopulateJob.set(wait_until: Date.tomorrow.midnight).perform_later self.name, 'populate_belongs_to'
+          end
           next
         end
       end

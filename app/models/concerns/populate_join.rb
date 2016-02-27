@@ -18,7 +18,9 @@ module PopulateJoin
           data = sync.send(@call_class.sync_type, params: { 'limit' => 1000, sync_param_id => record.identifier })
           results_arr += get_results(sync: sync, data: data, sync_param_id: sync_param_id, record: record)
         rescue
-          CallLog.find_or_create_by(status: data['status'], message: data['message'], location: self.name, location_method: 'populate_joins')
+          if data['status'] == '429' # reached API limit for the day
+            RetryPopulateJob.set(wait_until: Date.tomorrow.midnight).perform_later self.name, 'populate_joins'
+          end
           next
         end
       end
