@@ -19,6 +19,7 @@ You will need the following things properly installed on your computer.
 ## Running / Development
 
 * `rails s`
+* `ember server` in the [Ember repo](https://github.com/njpaz/visual-climate)
 
 ## Running Tests
 
