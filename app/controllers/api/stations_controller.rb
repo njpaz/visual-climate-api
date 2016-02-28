@@ -1,6 +1,12 @@
 class API::StationsController < API::BaseController
   def index
-    render json: Station.all
+    @stations = if params[:id]
+      Station.where(id: params[:id])
+    else
+      Station.all
+    end
+
+    render json: @stations
   end
 
   def show

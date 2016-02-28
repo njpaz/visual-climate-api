@@ -1,6 +1,12 @@
 class API::DataTypesController < API::BaseController
   def index
-    render json: DataType.all
+    @data_types = if params[:id]
+      DataType.where(id: params[:id])
+    else
+      DataType.all
+    end
+
+    render json: @data_types
   end
 
   def show

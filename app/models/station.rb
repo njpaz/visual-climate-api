@@ -24,6 +24,11 @@ class Station < ActiveRecord::Base
     key_name.to_sym
   end
 
+  def titlecase_name
+    split_name = name.split(', ')
+    split_name.first.titleize + ', ' + split_name.last
+  end
+
 private
 
   def self.format_imports(data_results, existing_sets)
