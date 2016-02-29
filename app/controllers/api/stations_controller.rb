@@ -2,6 +2,8 @@ class API::StationsController < API::BaseController
   def index
     @stations = if params[:id]
       Station.where(id: params[:id])
+    elsif params[:identifier]
+      Station.where(identifier: params[:identifier])
     else
       Station.all
     end

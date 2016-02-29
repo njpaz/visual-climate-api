@@ -2,6 +2,8 @@ class API::DataTypesController < API::BaseController
   def index
     @data_types = if params[:id]
       DataType.where(id: params[:id])
+    elsif params[:identifier]
+      DataType.where(identifier: params[:identifier])
     else
       DataType.all
     end
