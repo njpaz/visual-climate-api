@@ -22,10 +22,10 @@ namespace :initial do
     ]
 
     dates.each do |date|
-      WeatherDatum.create(date: date, station_id: Station.first, data_type_id: DataType.first, value: (rand * 50).round)
-      WeatherDatum.create(date: date, station_id: Station.first, data_type_id: DataType.last, value: (rand * 50).round)
-      WeatherDatum.create(date: date, station_id: Station.last, data_type_id: DataType.first, value: (rand * 50).round)
-      WeatherDatum.create(date: date, station_id: Station.last, data_type_id: DataType.last, value: (rand * 50).round)
+      WeatherDatum.create(date: date, station: Station.first, data_type: DataType.first, value: (rand * 50).round)
+      WeatherDatum.create(date: date, station: Station.first, data_type: DataType.last, value: (rand * 50).round)
+      WeatherDatum.create(date: date, station: Station.last, data_type: DataType.first, value: (rand * 50).round)
+      WeatherDatum.create(date: date, station: Station.last, data_type: DataType.last, value: (rand * 50).round)
     end
   end
 
