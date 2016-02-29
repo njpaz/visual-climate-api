@@ -10,6 +10,7 @@ You will need the following things properly installed on your computer.
 * Ruby >= 2.2.3
 * Rails 4.2.5
 * PostgreSQL
+* Redis
 
 ## Installation
 
