@@ -1,4 +1,8 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  mount Sidekiq::Web => '/sidekiq'
+
   namespace :api do
     resources :data_sets, only: [:index, :show]
     resources :data_types, only: [:index, :show]
