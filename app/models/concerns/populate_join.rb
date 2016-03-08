@@ -19,9 +19,9 @@ module PopulateJoin
           results_arr += get_results(sync: sync, data: data, sync_param_id: sync_param_id, record: record)
         rescue
           if data['status'] == '429' # reached API limit for the day
-            RetryPopulateJob.set(wait_until: Date.tomorrow.midnight).perform_later self.name, 'populate_joins'
+            RetryPopulateJob.set(wait_until: Date.tomorrow.noon).perform_later self.name, 'populate_joins'
           end
-          next
+          break
         end
       end
 

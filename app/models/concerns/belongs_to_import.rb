@@ -12,21 +12,21 @@ module BelongsToImport
         begin
           params = { 'limit' => 1000, belongs_to_sync_id => record.identifier }
           data = sync.send(sync_type, params: params)
-          related_records = get_related_data(data, params)
+          related_records = get_related_data(sync, data, params)
 
           where(identifier: related_records).update_all(belongs_to_id => record.id)
         rescue
           if data['status'] == '429' # reached API limit for the day
-            RetryPopulateJob.set(wait_until: Date.tomorrow.midnight).perform_later self.name, 'populate_belongs_to'
+            RetryPopulateJob.set(wait_until: Date.tomorrow.noon).perform_later self.name, 'populate_belongs_to'
           end
-          next
+          break
         end
       end
     end
 
   private
 
-    def get_related_data(data, params)
+    def get_related_data(sync, data, params)
       related_records = data['results'].map { |dr| dr['id'] }
 
       count = data['metadata']['resultset']['count']

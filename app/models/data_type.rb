@@ -42,9 +42,9 @@ private
         where(identifier: related_records).update_all({ related_class.sync_id => record.id })
       rescue
         if data['status'] == '429' # reached API limit for the day
-          RetryPopulateJob.set(wait_until: Date.tomorrow.midnight).perform_later self.name, 'populate_belongs_to'
+          RetryPopulateJob.set(wait_until: Date.tomorrow.noon).perform_later self.name, 'populate_belongs_to'
         end
-        next
+        break
       end
     end
   end
