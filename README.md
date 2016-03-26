@@ -17,8 +17,7 @@ You will need the following things properly installed on your computer.
 * `git clone <repository-url>` this repository
 * change into the new directory
 * `bundle install`
-* `mv config/secrets.yml.example config/secrets.yml`
-* `rake secret` and add the result to the `secret_key_base` in `secrets.yml`
+* `rake initial:add_secrets`
 * `rake db:setup`
 
 ## Important!
@@ -28,7 +27,7 @@ If you want to run the app just to see the chart in action, you can run `rake in
 ## Running / Development
 
 * `rails s`
-* `ember server --proxy` in the [Ember repo](https://github.com/njpaz/visual-climate)
+* `ember server --proxy http://localhost:3000` in the [Ember repo](https://github.com/njpaz/visual-climate)
 
 ## Running Tests
 

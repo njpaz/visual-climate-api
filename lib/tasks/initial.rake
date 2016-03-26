@@ -29,4 +29,10 @@ namespace :initial do
     end
   end
 
+  desc "rename secrets.yml"
+  task add_secrets: :environment do
+    if File.exist?("#{Rails.root}/config/secrets.yml.example") && !File.exist?("#{Rails.root}/config/secrets.yml")
+      File.rename("#{Rails.root}/config/secrets.yml.example", "#{Rails.root}/config/secrets.yml")
+    end
+  end
 end
