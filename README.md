@@ -29,6 +29,10 @@ If you want to run the app just to see the chart in action, you can run `rake in
 * `rails s`
 * `ember server --proxy http://localhost:3000` in the [Ember repo](https://github.com/njpaz/visual-climate)
 
+## Viewing the API
+
+* The API is namespaced under `/api`. You don't need to run the Ember app in order to use the API.
+
 ## Running Tests
 
 * `rspec`
