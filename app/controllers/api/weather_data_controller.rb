@@ -5,7 +5,7 @@ class API::WeatherDataController < API::BaseController
     elsif params[:station_identifier] && params[:data_type_identifier]
       WeatherDatum.joins(:station, :data_type).where(stations: {identifier: params[:station_identifier]}, data_types: {identifier: params[:data_type_identifier]})
     else
-      WeatherDatum.all
+      []
     end
 
     render json: @weather_data

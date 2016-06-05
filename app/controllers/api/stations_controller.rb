@@ -5,7 +5,7 @@ class API::StationsController < API::BaseController
     elsif params[:identifier]
       Station.where(identifier: params[:identifier])
     else
-      Station.all
+      Station.where(id: WeatherDatum.pluck(:station_id))
     end
 
     render json: @stations
